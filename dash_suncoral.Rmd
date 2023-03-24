@@ -1,0 +1,93 @@
+---
+title: "Monitoramento Sun Coral PACS"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(readr)
+library(reshape2)
+library(leaflet)
+library(ggplot2)
+library(vegan)
+library(plotly)
+library(lubridate)
+library(dplyr)
+library(sf)
+
+library(RColorBrewer)
+palette(brewer.pal(8, "Set2"))
+```
+```{r dataread, include=FALSE}
+
+shape_data <- st_read("c//../shp/dafor.shp")
+
+
+
+```
+
+Map
+======================================================================
+
+### REBIO Arvoredo e Entorno 2023
+
+```{r map}
+#https://epsg.io/
+
+#epsg4326 <- leafletCRS(
+ #crsClass = "L.Proj.CRS",
+  #code = "EPSG:4326",
+  #proj4def = "+proj=longlat +datum=WGS84 +no_defs +type=crs",
+  #resolutions = 2^(16:7))
+
+
+#leaflet(options = leafletOptions(worldCopyJump = F, crs = epsg4326)) %>%
+  #addTiles() %>%
+  #addPolylines(data = shape_data) %>%   
+  #addMiniMap(toggleDisplay = T)
+
+
+#select features to display based on date ...
+
+#shape_data <- shape_data %>% 
+ #dplyr::mutate(n_tr_pr_level = cut(n_tr_pr, c(0,2,4,6),
+                                  # labels = c('0-3', '4-6', '>6')))
+
+
+#shape_data_df <- split(shape_data, shape_data$n_tr_pr_level)
+
+
+#l <- leaflet() %>% addTiles()
+
+
+#names(shape_data_df) %>%
+ # purrr::walk( function(df) {
+  #  l <<- l %>%
+   #   addPolylines(data#=shape_data_df[[df]],
+                         # lng=~long, lat=~lat,
+                          #group = df)
+  #})
+
+#l %>%
+ # addLayersControl(
+  #  overlayGroups = names(shape_data_df),
+   # options = layersControlOptions(collapsed = FALSE)
+  #)
+
+#l
+
+
+
+##https://rstudio.github.io/leaflet/showhide.html
+
+### feijao com arroz
+leaflet() %>%
+  addTiles() %>%
+  addPolylines(data = shape_data) %>% 
+  addMiniMap(toggleDisplay = T)
+
+
+```
+
