@@ -16,6 +16,8 @@ library(plotly)
 library(lubridate)
 library(dplyr)
 library(sf)
+library(crosstalk)
+
 
 library(RColorBrewer)
 palette(brewer.pal(8, "Set2"))
@@ -23,7 +25,7 @@ palette(brewer.pal(8, "Set2"))
 ```{r dataread, include=FALSE}
 
 shape_data <- st_read("c//../shp/dafor.shp")
-
+summary(shape_data)
 
 
 ```
@@ -51,32 +53,37 @@ Map
 
 #select features to display based on date ...
 
-#shape_data <- shape_data %>% 
- #dplyr::mutate(n_tr_pr_level = cut(n_tr_pr, c(0,2,4,6),
-                                  # labels = c('0-3', '4-6', '>6')))
+
+shape_data <- shape_data %>% 
+  dplyr::mutate( date2 = as.numeric( as.Date( data )),
+                 date3 = as.Date( data ))
 
 
-#shape_data_df <- split(shape_data, shape_data$n_tr_pr_level)
+shared_data <- SharedData$new(shape_data)
+
+filter_slider("data","Data", shared_data, ~data, width = "100%")
+
+leaflet(shared_data, width = "100%", height = 800) %>%
+  leaflet::addTiles() %>%
+  leaflet::addPolylines(data = shape_data) 
 
 
-#l <- leaflet() %>% addTiles()
 
 
-#names(shape_data_df) %>%
- # purrr::walk( function(df) {
-  #  l <<- l %>%
-   #   addPolylines(data#=shape_data_df[[df]],
-                         # lng=~long, lat=~lat,
-                          #group = df)
-  #})
 
-#l %>%
- # addLayersControl(
-  #  overlayGroups = names(shape_data_df),
-   # options = layersControlOptions(collapsed = FALSE)
-  #)
+#https://stackoverflow.com/questions/62849300/r-leaflet-add-a-range-slider-to-filter-markers-without-shiny
 
-#l
+
+leaflet() %>%
+  addTiles() %>%
+  addPolylines(data = shape_data) %>% 
+  addMiniMap(toggleDisplay = T)
+
+
+
+
+
+
 
 
 
